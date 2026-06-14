@@ -21,5 +21,9 @@
   <p class="whitespace-pre-line">
     {{ $recipe->steps }}
   </p>
+
+  <a href="/recipes/{{ $recipe->id }}/edit" class="text-xl font-bold text-blue-600">
+    Edit Recipe
+  </a>
 </div>
 @endsection

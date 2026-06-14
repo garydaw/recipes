@@ -23,6 +23,18 @@
 
   <!--- Content -->
   <main class="max-w-5xl mx-auto px-4">
+
+    @if (session('success'))
+      <div class="max-w-5xl mx-auto px-4 mb-4">
+          <div class="relative bg-green-100 text-green-800 p-4 rounded shadow">
+              <button type="button" onclick="this.closest('.relative').style.display='none'" class="absolute top-2 right-2 text-green-800 hover:text-green-900 font-bold">
+                &times;
+              </button>
+              {{ session('success') }}
+          </div>
+      </div>
+    @endif
+
     @yield('content')
   </main>
 
