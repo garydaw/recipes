@@ -15,9 +15,29 @@
       <a href="/recipes" class="text-xl font-bold text-blue-600">
         Recipes
       </a>
-      <a href="/recipes/create" class="text-xl font-bold text-blue-600">
-        Add Recipe
-      </a>
+
+      @auth
+        <a href="/recipes/create" class="text-xl font-bold text-blue-600">
+          Add Recipe
+        </a>
+        <div class="flex items-center gap-4">
+            <span class="text-gray-600 text-sm">
+                Hi {{ auth()->user()->name }}!
+            </span>
+
+            <form method="POST" action="/logout">
+                @csrf
+                <button class="text-red-500">Logout</button>
+            </form>
+        </div>
+      @endauth
+
+      @guest
+        <div class="flex gap-4">
+            <a href="/login" class="text-blue-500">Login</a>
+            <a href="/register" class="text-blue-500">Register</a>
+        </div>
+      @endguest
     </div>
   </nav>
 
