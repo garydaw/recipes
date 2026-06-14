@@ -2,10 +2,13 @@
 
 use Illuminate\Support\Facades\Route;
 
+use App\Http\Controllers\RecipeController;
+
 Route::get('/', function () {
-    return view('welcome');
+    return redirect('/recipes');
 });
 
-Route::get('/test-ui', function () {
-    return view('test');
-});
+Route::get('/recipes', [RecipeController::class, 'index']);
+Route::get('/recipes/create', [RecipeController::class, 'create']);
+Route::post('/recipes', [RecipeController::class, 'store']);
+Route::get('/recipes/{id}', [RecipeController::class, 'show']);
