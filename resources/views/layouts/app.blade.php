@@ -17,9 +17,11 @@
       </a>
 
       @auth
-        <a href="/recipes/create" class="text-xl font-bold text-blue-600">
-          Add Recipe
-        </a>
+        @if (auth()->user()->isContributor() || auth()->user()->isAdmin())
+          <a href="/recipes/create" class="text-xl font-bold text-blue-600">
+            Add Recipe
+          </a>
+        @endif
         <div class="flex items-center gap-4">
             <span class="text-gray-600 text-sm">
                 Hi {{ auth()->user()->name }}!
@@ -51,6 +53,17 @@
                 &times;
               </button>
               {{ session('success') }}
+          </div>
+      </div>
+    @endif
+
+    @if (session('error'))
+      <div class="max-w-5xl mx-auto px-4 mb-4">
+          <div class="relative bg-red-100 text-red-800 p-4 rounded shadow">
+              <button type="button" onclick="this.closest('.relative').style.display='none'" class="absolute top-2 right-2 text-red-800 hover:text-red-900 font-bold">
+                &times;
+              </button>
+              {{ session('error') }}
           </div>
       </div>
     @endif

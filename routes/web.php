@@ -8,9 +8,6 @@ Route::get('/', function () {
     return redirect('/recipes');
 });
 
-Route::get('/recipes', [RecipeController::class, 'index']);
-Route::get('/recipes/{id}', [RecipeController::class, 'show']);
-
 
 Route::middleware('auth')->group(function () {
     Route::get('/recipes/create', [RecipeController::class, 'create']);
@@ -20,6 +17,9 @@ Route::middleware('auth')->group(function () {
     Route::put('/recipes/{id}', [RecipeController::class, 'update']);
     Route::delete('/recipes/{id}', [RecipeController::class, 'destroy']);
 });
+
+Route::get('/recipes', [RecipeController::class, 'index']);
+Route::get('/recipes/{id}', [RecipeController::class, 'show']);
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

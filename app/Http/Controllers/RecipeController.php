@@ -21,6 +21,11 @@ class RecipeController extends Controller
 
     public function create()
     {
+        // check if user is a contributor or admin
+        if (!auth()->user()->isContributor() && !auth()->user()->isAdmin()) {
+            return redirect('/recipes')
+                ->with('error', 'You are not authorized to create a recipe.');
+        }
         return view('recipes.create');
     }
 
@@ -32,6 +37,15 @@ class RecipeController extends Controller
 
     public function update(Request $request, $id)
     {
+        $recipe = Recipe::findOrFail($id);
+
+        // Check if the authenticated user is the owner of the recipe and check if the user is an admin
+        if ($recipe->user_id !== auth()->id()
+            && auth()->user()->role !== 'admin') {
+            return redirect('/recipes')
+                ->with('error', 'You are not authorized to update this recipe.');
+        }
+
         $validatedData = $request->validate([
             'title' => 'required|max:124',
             'description' => 'nullable|max:500',
@@ -39,7 +53,6 @@ class RecipeController extends Controller
             'steps' => 'required',
         ]);
 
-        $recipe = Recipe::findOrFail($id);
         $recipe->update($validatedData);
 
         return redirect('/recipes/' . $recipe->id)
@@ -49,6 +62,14 @@ class RecipeController extends Controller
     public function destroy($id)
     {
         $recipe = Recipe::findOrFail($id);
+
+        // Check if the authenticated user is the owner of the recipe and check if the user is an admin
+        if ($recipe->user_id !== auth()->id()
+            && auth()->user()->role !== 'admin') {
+            return redirect('/recipes')
+                ->with('error', 'You are not authorized to delete this recipe.');
+        }
+
         $recipe->delete();
 
         return redirect('/recipes')
@@ -57,6 +78,11 @@ class RecipeController extends Controller
 
     public function store(Request $request)
     {
+        if (!auth()->user()->isContributor() && !auth()->user()->isAdmin()) {
+            return redirect('/recipes')
+                ->with('error', 'You are not authorized to create a recipe.');
+        }
+        
         $validatedData = $request->validate([
             'title' => 'required|max:124',
             'description' => 'nullable|max:500',
@@ -64,7 +90,10 @@ class RecipeController extends Controller
             'steps' => 'required',
         ]);
 
-        Recipe::create($validatedData);
+        Recipe::create([
+            'user_id' => auth()->id(),
+            ...$validatedData
+        ]);
 
         return redirect('/recipes')
             ->with('success', 'Recipe created successfully!');

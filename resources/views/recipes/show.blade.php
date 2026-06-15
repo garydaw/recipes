@@ -22,8 +22,10 @@
     {{ $recipe->steps }}
   </p>
 
-  <a href="/recipes/{{ $recipe->id }}/edit" class="text-xl font-bold text-blue-600">
-    Edit Recipe
-  </a>
+  @if (auth()->user() && (auth()->id() === $recipe->user_id || auth()->user()->isAdmin()))
+    <a href="/recipes/{{ $recipe->id }}/edit" class="text-xl font-bold text-blue-600">
+      Edit Recipe
+    </a>
+  @endif
 </div>
 @endsection

@@ -29,4 +29,16 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    // Is the user an admin?
+    public function isAdmin(): bool
+    {
+        return $this->role === 'admin';
+    }
+
+    // Is the user a contributor?
+    public function isContributor(): bool
+    {
+        return $this->role === 'contributor';
+    }
 }
