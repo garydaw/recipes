@@ -15,13 +15,15 @@
       <a href="/recipes" class="text-xl font-bold text-blue-600">
         Recipes
       </a>
+      
+      @can('create', App\Models\Recipe::class)
+        <a href="/recipes/create" class="text-xl font-bold text-blue-600">
+          Add Recipe
+        </a>
+      @endcan
 
       @auth
-        @if (auth()->user()->isContributor() || auth()->user()->isAdmin())
-          <a href="/recipes/create" class="text-xl font-bold text-blue-600">
-            Add Recipe
-          </a>
-        @endif
+        
         <div class="flex items-center gap-4">
             <span class="text-gray-600 text-sm">
                 Hi {{ auth()->user()->name }}!

@@ -8,18 +8,12 @@ Route::get('/', function () {
     return redirect('/recipes');
 });
 
+Route::resource('recipes', RecipeController::class)
+    ->middleware('auth')
+    ->except(['index', 'show']);
 
-Route::middleware('auth')->group(function () {
-    Route::get('/recipes/create', [RecipeController::class, 'create']);
-    Route::post('/recipes', [RecipeController::class, 'store']);
-
-    Route::get('/recipes/{id}/edit', [RecipeController::class, 'edit']);
-    Route::put('/recipes/{id}', [RecipeController::class, 'update']);
-    Route::delete('/recipes/{id}', [RecipeController::class, 'destroy']);
-});
-
-Route::get('/recipes', [RecipeController::class, 'index']);
-Route::get('/recipes/{id}', [RecipeController::class, 'show']);
+Route::resource('recipes', RecipeController::class)
+    ->only(['index', 'show']);
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

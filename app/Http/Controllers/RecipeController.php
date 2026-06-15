@@ -13,35 +13,30 @@ class RecipeController extends Controller
         return view('recipes.index', compact('recipes'));
     }
 
-    public function show($id)
+    public function show(Recipe $recipe)
     {
-        $recipe = Recipe::findOrFail($id);
         return view('recipes.show', compact('recipe'));
     }
 
     public function create()
     {
         // check if user is a contributor or admin
-        if (!auth()->user()->isContributor() && !auth()->user()->isAdmin()) {
+       if (!auth()->user()->can('create', Recipe::class)) {
             return redirect('/recipes')
                 ->with('error', 'You are not authorized to create a recipe.');
         }
         return view('recipes.create');
     }
 
-    public function edit($id)
+    public function edit(Recipe $recipe)
     {
-        $recipe = Recipe::findOrFail($id);
         return view('recipes.edit', compact('recipe'));
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $request, Recipe $recipe)
     {
-        $recipe = Recipe::findOrFail($id);
-
         // Check if the authenticated user is the owner of the recipe and check if the user is an admin
-        if ($recipe->user_id !== auth()->id()
-            && auth()->user()->role !== 'admin') {
+        if (!auth()->user()->can('update', $recipe)) {
             return redirect('/recipes')
                 ->with('error', 'You are not authorized to update this recipe.');
         }
@@ -59,13 +54,10 @@ class RecipeController extends Controller
             ->with('success', 'Recipe updated successfully!');
     }
 
-    public function destroy($id)
+    public function destroy(Recipe $recipe)
     {
-        $recipe = Recipe::findOrFail($id);
-
         // Check if the authenticated user is the owner of the recipe and check if the user is an admin
-        if ($recipe->user_id !== auth()->id()
-            && auth()->user()->role !== 'admin') {
+        if (!auth()->user()->can('delete', $recipe)) {
             return redirect('/recipes')
                 ->with('error', 'You are not authorized to delete this recipe.');
         }
@@ -78,7 +70,7 @@ class RecipeController extends Controller
 
     public function store(Request $request)
     {
-        if (!auth()->user()->isContributor() && !auth()->user()->isAdmin()) {
+        if (!auth()->user()->can('create', Recipe::class)) {
             return redirect('/recipes')
                 ->with('error', 'You are not authorized to create a recipe.');
         }

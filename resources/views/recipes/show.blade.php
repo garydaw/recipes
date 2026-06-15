@@ -22,10 +22,10 @@
     {{ $recipe->steps }}
   </p>
 
-  @if (auth()->user() && (auth()->id() === $recipe->user_id || auth()->user()->isAdmin()))
+  @can('update', $recipe)
     <a href="/recipes/{{ $recipe->id }}/edit" class="text-xl font-bold text-blue-600">
       Edit Recipe
     </a>
-  @endif
+  @endcan
 </div>
 @endsection
